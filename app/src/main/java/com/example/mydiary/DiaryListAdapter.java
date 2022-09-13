@@ -143,7 +143,6 @@ public class DiaryListAdapter extends RecyclerView.Adapter<DiaryListAdapter.View
     }
 
     public void setSampleList(ArrayList<DiaryModel> lstDiary){
-
         mLstDiary = lstDiary;
     }
 }

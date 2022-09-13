@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/selector_btn_bad_cloud.xml" value="0.2155" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/selector_btn_cloud.xml" value="0.2155" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/selector_btn_cloudy.xml" value="0.2155" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/selector_btn_rainy.xml" value="0.2155" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/selector_btn_snowy.xml" value="0.2155" />
+        <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/selector_btn_sun.xml" value="0.2155" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/drawable/shape_intput_field.xml" value="0.2155" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/layout/activity_diary_detail.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/User/AndroidStudioProjects/MyDiary/app/src/main/res/layout/activity_main.xml" value="0.264" />

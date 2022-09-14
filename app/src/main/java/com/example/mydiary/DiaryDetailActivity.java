@@ -33,10 +33,15 @@ public class DiaryDetailActivity extends AppCompatActivity implements View.OnCli
     private int mSelectedWeatherType = -1; // 선택 된 날씨 값 (1~6)
 
 
+    private DatabaseHelper mDatabaseHelper; // Database Util  객체
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary_detail);
+
+        //데이터 베이스 객체 생성
+        mDatabaseHelper = new DatabaseHelper(this);
 
         mTvDate = findViewById(R.id.tv_date);   //일시 설정 텍스트
         mEtTitle = findViewById(R.id.et_title); //제목 입력 필드
@@ -94,9 +99,12 @@ public class DiaryDetailActivity extends AppCompatActivity implements View.OnCli
                 String content = mEtContent.getText().toString();   //내용 입력 값
                 String userDate = mSelectedUserDate;    // 사용자가 선택한 일시
 
-                String writeDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.KOREAN).format(new Date());
+                String writeDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.KOREAN).format(new Date()); //작성 완료 누른 시전의 일시
 
                 // 데이터 베이스에 저장
+                mDatabaseHelper.setInsertDiaryList(title, content, mSelectedWeatherType, userDate, writeDate);
+                Toast.makeText(this, "저장 완료", Toast.LENGTH_SHORT).show();
+
 
                 finish(); //현재 액티비티 종료
                 break;

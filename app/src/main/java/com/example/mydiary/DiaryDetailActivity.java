@@ -93,7 +93,6 @@ public class DiaryDetailActivity extends AppCompatActivity implements View.OnCli
                     Toast.makeText(this, "날씨를 선택해 주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 //데이터 저장
                 String title = mEtTitle.getText().toString();   // 제목 입력 값
                 String content = mEtContent.getText().toString();   //내용 입력 값

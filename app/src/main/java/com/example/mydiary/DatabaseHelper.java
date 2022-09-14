@@ -34,12 +34,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "userDate TEXT NOT NULL, " +
                 "writeDate TEXT NOT NULL )");
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         onCreate(db);
     }
-
     /**
      * 다이어리 작성 데이터를 DB에 저장한다. (insert)
      */

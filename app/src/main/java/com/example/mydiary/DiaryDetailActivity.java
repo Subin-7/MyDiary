@@ -3,6 +3,7 @@ package com.example.mydiary;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -11,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.radiobutton.MaterialRadioButton;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,6 +65,45 @@ public class DiaryDetailActivity extends AppCompatActivity implements View.OnCli
         mSelectedUserDate = new SimpleDateFormat("yyyy/MM/dd E요일", Locale.KOREAN).format(new Date());
         mTvDate.setText(mSelectedUserDate);
 
+        //이전 엑티비티로부터 값을 전달 받기
+        Intent intent = getIntent();
+        if (intent.getExtras() != null) {
+            //intent putExtra 했던 데이터가 존재한다면 내부를 수행
+            DiaryModel diaryModel = (DiaryModel) intent.getSerializableExtra("diaryModel");
+            mDetailMode = intent.getStringExtra("mode");
+            mBeforeDate = diaryModel.getWriteDate();    //게시글 data update 쿼리문 처리를 위해서 여기서 받아둠
+
+            //넘겨 받은 값을 활용해서 각 필드들에 설정해주기
+            mEtTitle.setText(diaryModel.getTitle());
+            mEtContent.setText(diaryModel.getContent());
+            int weatherType = diaryModel.getWeatherType();
+            ((MaterialRadioButton)mRgWeather.getChildAt(weatherType)).setChecked(true);
+            mSelectedUserDate = diaryModel.getUserDate(); //수정하기 날짜가 현재 날짜로 변경 되지 않도록
+            mTvDate.setText(diaryModel.getUserDate());
+
+            if(mDetailMode.equals("modify")){
+                //수정모드
+                TextView tv_header_title =  findViewById(R.id.tv_header_title);
+                tv_header_title.setText("나의 기록 수정");
+
+            }else if (mDetailMode.equals("detail")){
+                //상세모드
+                TextView tv_header_title =  findViewById(R.id.tv_header_title);
+                tv_header_title.setText("나의 기록");
+
+                //읽기 전용 화면으로 표시
+                mEtTitle.setEnabled(false);
+                mEtContent.setEnabled(false);
+                mTvDate.setEnabled(false);
+                for (int i =0; i<mRgWeather.getChildCount(); i++){
+                    //라디오 그룹 내의 6개 버튼들을 반족하여 비활성화 처리 함
+                    mRgWeather.getChildAt(i).setEnabled(false);
+                }
+                //작성 완료 버튼을 invisible ( 투명 ) 처리함
+                iv_check.setVisibility(View.INVISIBLE);
+
+            }
+        }
 
 
     }
@@ -94,15 +138,26 @@ public class DiaryDetailActivity extends AppCompatActivity implements View.OnCli
                     return;
                 }
                 //데이터 저장
-                String title = mEtTitle.getText().toString();   // 제목 입력 값
+                String title = mEtTitle.getText().toString();       // 제목 입력 값
                 String content = mEtContent.getText().toString();   //내용 입력 값
-                String userDate = mSelectedUserDate;    // 사용자가 선택한 일시
-
+                String userDate = mSelectedUserDate;                // 사용자가 선택한 일시
+                if (userDate.equals("")){
+                    //별도 날짜 설정을 하지 않은 채로 작성완료를 누를 경우
+                    userDate = mTvDate.getText().toString();
+                }
                 String writeDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.KOREAN).format(new Date()); //작성 완료 누른 시전의 일시
 
-                // 데이터 베이스에 저장
-                mDatabaseHelper.setInsertDiaryList(title, content, mSelectedWeatherType, userDate, writeDate);
-                Toast.makeText(this, "저장 완료", Toast.LENGTH_SHORT).show();
+                // 엑티비티의 현재 모드에 따라서 데이터 베이스에 저장 또는 업데이트
+                if (mDetailMode.equals("modify")){
+                    //게시글 수정 모드
+                    mDatabaseHelper.setUpdateDiaryList(title, content, mSelectedWeatherType, userDate, writeDate, mBeforeDate);
+                    Toast.makeText(this, "나의 기록을 수정하였습니다.", Toast.LENGTH_SHORT).show();
+                }else{
+                    //게시글 작성 모드
+                    mDatabaseHelper.setInsertDiaryList(title, content, mSelectedWeatherType, userDate, writeDate);
+                    Toast.makeText(this, "나의 기록을 저장하였습니다.", Toast.LENGTH_SHORT).show();
+                }
+
 
 
                 finish(); //현재 액티비티 종료

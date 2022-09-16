@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class DiaryListAdapter extends RecyclerView.Adapter<DiaryListAdapter.ViewHolder> {
     ArrayList<DiaryModel> mLstDiary;        // 다이어리 데이터들을 들고 있는 자료형 배열
     Context mContext;
+    DatabaseHelper mDatabaseHelper;         // 데이터 베이스 헬퍼 클래스
 
     @NonNull
     @Override
@@ -26,6 +27,7 @@ public class DiaryListAdapter extends RecyclerView.Adapter<DiaryListAdapter.View
 
 
         mContext = parent.getContext();
+        mDatabaseHelper = new DatabaseHelper(mContext);
         View holder = LayoutInflater.from(mContext).inflate(R.layout.list_item_diary,parent,false);
         return new ViewHolder(holder);
     }
@@ -128,8 +130,13 @@ public class DiaryListAdapter extends RecyclerView.Adapter<DiaryListAdapter.View
                                         diaryDetailIntent.putExtra( "diaryModel", diaryModel);  // 다이어리 데이터 넘기기
                                         diaryDetailIntent.putExtra("mode", "modify");   //수정하기 모드로 설정
                                         mContext.startActivity(diaryDetailIntent);
+
                                     }else{
-                                        //삭제하기 버튼을 눌렀을 때
+                                        //삭제하기 버튼을 눌렀을 때..
+                                        //delete database
+                                        mDatabaseHelper.setDeleteDiaryList(diaryModel.getWriteDate());
+
+                                        //delete ui
                                         mLstDiary.remove(currentPosition);
                                         notifyItemRemoved(currentPosition);
                                     }
@@ -142,8 +149,9 @@ public class DiaryListAdapter extends RecyclerView.Adapter<DiaryListAdapter.View
         }
     }
 
-    public void setSampleList(ArrayList<DiaryModel> lstDiary){
-
+    public void setListInit(ArrayList<DiaryModel> lstDiary){
+        // 데이터 리스트 update
         mLstDiary = lstDiary;
+        notifyDataSetChanged(); // 리스트 뷰 새로고침
     }
 }
